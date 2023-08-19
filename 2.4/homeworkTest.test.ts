@@ -6,7 +6,11 @@ import {
     WebDriver,
     WebElement,
     Key,
+    error,
 } from "selenium-webdriver";
+/* why did we start coding with import and not var,const or lets.how do you know what symbol to use. i think in the {} 
+is an array i belive mean list I belive ,means next item*/  
+import { elementLocated } from "selenium-webdriver/lib/until";
 
 const chromedriver = require("chromedriver");
 
@@ -36,6 +40,7 @@ describe("Employee Manager 1.2", () => {
     });
     describe("handles unsaved, canceled, and saved changes correctly", () => {
         test("An unsaved change doesn't persist", async () => {
+            /* what and when do you use () =>*/ 
         /*
         This test follows these steps:
         1. Open Bernice Ortiz
@@ -44,29 +49,30 @@ describe("Employee Manager 1.2", () => {
         4. Open Bernice Ortiz
         5. Verify the name field is the original name
         */
-        await driver.findElement().click();
+        await driver.findElement(bernice).click();
         await driver.wait(
-            until.elementIsVisible(await driver.findElement())
+            until.elementIsVisible(await driver.findElement(nameInput))
         );
-        await driver.findElement().clear();
-        await driver.findElement().sendKeys("Test Name");
-        await driver.findElement().click();
+        await driver.findElement(nameInput).clear();
+        await driver.findElement(nameInput).sendKeys("Test Name");
+        await driver.findElement(phillip).click();
         await driver.wait(
             until.elementTextContains(
-            await driver.findElement(),
+            await driver.findElement(nameDisplay),
             "Phillip"
             )
         );
-        await driver.findElement().click();
+        await driver.findElement(bernice).click();
         await driver.wait(
             until.elementTextContains(
-            await driver.findElement(),
+            await driver.findElement(nameDisplay),
             "Bernice"
             )
         );
+        
         expect(
-            await (await driver.findElement()).getAttribute("")
-        ).toBe("");
+            await (await driver.findElement(nameInput)).getAttribute("value")
+        ).toBe("Bernice Ortiz");
         });
 
         test("A canceled change doesn't persist", async () => {
@@ -77,16 +83,16 @@ describe("Employee Manager 1.2", () => {
             3. Click cancel
             5. Verify the name field is the original name
             */
-            await driver.findElement().click();
+            await driver.findElement(phillip).click();
             await driver.wait(
-                until.elementIsVisible(await driver.findElement())
+                until.elementIsVisible(await driver.findElement(nameInput))
             );
-            await driver.findElement().clear();
-            await driver.findElement().sendKeys("Test Name");
-            await driver.findElement().click();
+            await driver.findElement(nameInput).clear();
+            await driver.findElement(nameInput).sendKeys("Test Name");
+            await driver.findElement(cancelButton).click();
             expect(
-                await (await driver.findElement()).getAttribute("")
-            ).toBe("");
+                await (await driver.findElement(nameInput)).getAttribute("value")
+            ).toBe("Phillip Weaver");
         });
 
         test("A saved change persists", async () => {
@@ -99,23 +105,23 @@ describe("Employee Manager 1.2", () => {
             5. Open Bernice Ortiz's old record
             5. Verify the name field is the edited name
             */
-            await driver.findElement().click();
+            await driver.findElement(bernice).click();
             await driver.wait(
-                until.elementIsVisible(await driver.findElement())
+                until.elementIsVisible(await driver.findElement(nameInput))
             );
-            await driver.findElement().clear();
-            await driver.findElement().sendKeys("Test Name");
-            await driver.findElement().click();
-            await driver.findElement().click();
+            await driver.findElement(saveButton).clear();
+            await driver.findElement(phillip).sendKeys("Test Name");
+            await driver.findElement(bernice).click();
+            await driver.findElement(nameInput).click();
             await driver.wait(
                 until.elementTextContains(
-                await driver.findElement(),
+                await driver.findElement(nameInput),
                 "Phillip"
                 )
             );
-            await driver.findElement().click();
+            await driver.findElement(nameInput).click();
             expect(
-                await (await driver.findElement()).getAttribute("value")
+                await (await driver.findElement(nameInput)).getAttribute("value")
             ).toBe("Bernice Ortiz");
     });
 });
@@ -129,15 +135,15 @@ describe("Employee Manager 1.2", () => {
             3. Save the change
             4. Verify the error is present
             */
-            await driver.findElement().click();
+            await driver.findElement(bernice).click();
             await driver.wait(
-                until.elementIsVisible(await driver.findElement())
+                until.elementIsVisible(await driver.findElement(nameInput))
             );
-            await driver.findElement().clear();
-            await driver.findElement().sendKeys(Key.SPACE, Key.BACK_SPACE);
-            await driver.findElement().click();
-            await driver.wait(until.elementLocated());
-            expect(await (await driver.findElement()).getText()).toBe(
+            await driver.findElement(nameInput).clear();
+            await driver.findElement(nameInput).sendKeys(Key.SPACE, Key.BACK_SPACE);
+            await driver.findElement(nameInput).click();
+            await driver.wait(until.elementLocated(saveButton));
+            expect(await (await driver.findElement(errorCard)).getText()).toBe(
                 "The name field must be between 1 and 30 characters long."
             );
         });
@@ -151,21 +157,23 @@ describe("Employee Manager 1.2", () => {
             5. Cancel the change
             6. Verify the error is gone
             */
-            await driver.findElement().click();
+            await driver.findElement(bernice).click();
             await driver.wait(
-                until.elementIsVisible(await driver.findElement())
+                until.elementIsVisible(await driver.findElement(nameInput))
             );
-            await driver.findElement().clear();
-            await driver.findElement().sendKeys(Key.SPACE, Key.BACK_SPACE);
-            await driver.findElement().click();
-            await driver.wait(until.elementLocated());
-            expect(await (await driver.findElement()).getText()).toBe(
+            await driver.findElement(nameInput).clear();
+            await driver.findElement(nameInput).sendKeys(Key.SPACE, Key.BACK_SPACE);
+            await driver.findElement(saveButton).click();
+            await driver.wait(until.elementLocated(errorCard));
+            expect(await (await driver.findElement(errorCard)).getText()).toBe(
                 "The name field must be between 1 and 30 characters long."
             );
-            await driver.findElement().sendKeys(Key.SPACE);
-            await driver.findElement().click();
+            await driver.findElement(errorCard).sendKeys(Key.SPACE);
+            await driver.findElement(cancelButton).click();
             driver.wait(() => true, 500);
-            expect(await driver.findElements()).toHaveLength(0);
+            expect(await driver.findElements(errorCard)).toHaveLength(0);
+            /* I could'nt get this code to pass. I am having truble understanding when and why. how do you know when to use () . == ++ ? */
+         
         });
     });
 });

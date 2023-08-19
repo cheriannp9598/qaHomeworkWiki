@@ -1,4 +1,4 @@
-import { myFunction } from "./newFunction";
+import { myFunction } from "./2newFunction";
 
 describe("myFunction", () => {
   it("returns the word 'true' if I pass the function the number 5", () => {
