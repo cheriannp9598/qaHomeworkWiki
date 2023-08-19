@@ -1,3 +1,5 @@
+/* why did we uses describe, test & expect is that are var? I thought var const and lets are the only words you could us as a var.
+I understand anything in ""is a string how do you know when to use the symbles and brackets */
 describe("Testing the calculator", () => {
     test("Example test", () => {
       expect(calculatorr.add(2, 50)).toBe(52);
@@ -24,12 +26,12 @@ describe("Testing the calculator", () => {
       });
     });
   });
-  
+  /* I think I understand == means equel ++ means add. what is * $  */
   const calculatorr = {
     /** Takes two numbers and adds them together.
      * @example
      * calculator.add(2, 3) == 5
-     */
+     */  
     add: (a: number, b: number): number => a + b,
     /** Takes two numbers and subtracts the second from the first.
      * @example
